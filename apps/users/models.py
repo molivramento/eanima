@@ -1,8 +1,7 @@
-from datetime import datetime
-
 import ormar
 from ormar import pre_save
 from uuid import UUID, uuid4
+from datetime import datetime
 from database.config import BaseMeta
 
 

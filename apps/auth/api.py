@@ -22,4 +22,9 @@ async def login_for_access_token(credentials: OAuth2PasswordRequestForm = Depend
 
 @router.get('/me', response_model=User, response_model_exclude={'password'})
 async def me(current_user: User = Depends(get_current_active_user)):
+    """
+    Return authenticated info of user \n
+    :param current_user: \n
+    :return:
+    """
     return current_user

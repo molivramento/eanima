@@ -1,0 +1,6 @@
+.env
+alembic.ini
+alembic
+db.sqlite
+test_main.http
+venv
