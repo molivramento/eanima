@@ -1,23 +1,15 @@
-from apps.variations.models import VariationOption, Variation
+from apps.variations.models import Option, Variation
 
 RequestVariation = Variation.get_pydantic(
     exclude={
         'id': ...,
-        'created_by': ...,
-        'updated_by': ...,
-        'created_date': ...,
-        'updated_date': ...,
         'variationoptions': ...
     }
 )
 
-RequestVariationOption = VariationOption.get_pydantic(
+RequestVariationOption = Option.get_pydantic(
     exclude={
         'id': ...,
-        'created_by': ...,
-        'updated_by': ...,
-        'created_date': ...,
-        'updated_date': ...,
         'variation': ...
     }
 )

@@ -2,7 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter
 
-from apps.variations.models import Variation, VariationOption
+from apps.variations.models import Variation, Option
 from apps.variations.schema import RequestVariationOption, RequestVariation
 
 router = APIRouter()
@@ -41,13 +41,13 @@ async def get_options_of_variation(pk: UUID):
     return await Variation.objects.select_related('variationoptions').filter(id=pk).all()
 
 
-@router.post('/option/create', response_model=VariationOption)
+@router.post('/option/create', response_model=Option)
 async def create_variation(pk: UUID, data: RequestVariationOption):
     get_variation = await Variation.objects.get(id=pk)
-    return await VariationOption.objects.create(**data.dict(), variation=get_variation)
+    return await Option.objects.create(**data.dict(), variation=get_variation)
 
 
-@router.put('/option/update', response_model=VariationOption)
+@router.put('/option/update', response_model=Option)
 async def update_variation(pk: UUID, data: RequestVariationOption):
-    update = await VariationOption.objects.get(id=pk)
+    update = await Option.objects.get(id=pk)
     return await update.update(**data.dict())

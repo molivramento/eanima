@@ -1,30 +1,30 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
-from .utils import authenticate_user, create_access_token, get_current_user, get_current_active_user
+from .deps import JWTBearer
+from .schema import RequestLogin, ResponseUser
+from fastapi import APIRouter, Depends, HTTPException, status, Request
+from .utils import authenticate_user, encode_token, encode_refresh_token, decode_refresh_token, decode_token, uuid_auth
+
 from ..users.models import User
 
 router = APIRouter()
 
 
-@router.post('/token')
-async def login_for_access_token(credentials: OAuth2PasswordRequestForm = Depends()):
-    user = await authenticate_user(credentials.username, credentials.password)
+@router.post('/login')
+async def get_token(data: RequestLogin):
+    user = await authenticate_user(data)
     if not user:
-        raise HTTPException(
-            status.HTTP_401_UNAUTHORIZED,
-            detail='Incorrect email or password'
-        )
-    access_token = create_access_token(
-        data={'email': user.email}
-    )
-    return {'access_token': access_token, 'token_type': 'Bearer'}
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail='User does not exist!')
+    access_token = encode_token(data={'id': str(user.id), 'username': user.username})
+    rf = encode_refresh_token(data={'id': str(user.id), 'username': user.username})
+    return {'access_token': access_token, 'refresh_token': rf, 'user': user}
 
 
-@router.get('/me', response_model=User, response_model_exclude={'password'})
-async def me(current_user: User = Depends(get_current_active_user)):
-    """
-    Return authenticated info of user \n
-    :param current_user: \n
-    :return:
-    """
-    return current_user
+@router.post('/refreshToken')
+async def refresh_token(request: Request):
+    rf = request.headers.get('authorization').split()[1]
+    return decode_refresh_token(rf)
+
+
+@router.get('/me', response_model=ResponseUser, dependencies=[Depends(JWTBearer())])
+async def me(request: Request):
+    return await User.objects.get(id=uuid_auth(request))
+
