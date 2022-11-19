@@ -21,3 +21,4 @@ class Option(ormar.Model):
     id: UUID = ormar.UUID(primary_key=True, nullable=True)
     variation: Optional[Variation] = ormar.ForeignKey(Variation, nullable=True)
     value: str = ormar.String(max_length=128, default=None)
+    unit: str = ormar.String(max_length=32, nullable=True)

@@ -21,8 +21,8 @@ async def get_product(pk: UUID):
 
 
 @router.post('/create')
-async def create_product(pk: UUID, data: RequestProducts):
-    category = await Category.objects.get(id=pk)
+async def create_product(category_id: UUID, data: RequestProducts):
+    category = await Category.objects.get(id=category_id)
     return await Product.objects.create(**data.dict(), category_id=category)
 
 

@@ -7,6 +7,6 @@ from apps.variations.models import Variation, Option
 from apps.products.models import Product, ProductInventory
 
 
-@pre_save([Option, Variation, Store])
+@pre_save([Option, Variation])
 async def create_uuid(sender, instance, **kwargs):
     instance.id = uuid4()

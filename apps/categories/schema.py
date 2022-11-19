@@ -5,6 +5,15 @@ RequestCategory = Category.get_pydantic(
         'id': ...,
         'products': ...,
         'description': ...,
-        'active': ...
+        'active': ...,
+        'starting': ...,
+        'ending': ...,
+        'discount': ...,
+        'starting_discount': ...,
+        'ending_discount': ...,
+        'meta_title': ...,
+        'meta_description': ...,
+        'meta_keywords': ...,
+        'parent': ...
     }
 )

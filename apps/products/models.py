@@ -37,7 +37,6 @@ class ProductInventory(ormar.Model):
 
     id: UUID = ormar.UUID(primary_key=True, nullable=True)
     store: Optional[Store] = ormar.ForeignKey(Store, nullable=True)
-    variations: Optional[list[Variation]] = ormar.ManyToMany(Variation, nullable=True)
     ean: str = ormar.String(max_length=64, unique=True)
     sku: str = ormar.String(max_length=128, unique=True)
     amount: int = ormar.Integer(nullable=True)
@@ -50,6 +49,15 @@ class ProductInventory(ormar.Model):
     ending_discount: datetime = ormar.DateTime(default=None, nullable=True)
 
 
-@pre_save([Product, ProductInventory])
+class ProductOption(ormar.Model):
+    class Meta(BaseMeta):
+        tablename = 'product_options'
+
+    id: UUID = ormar.UUID(primary_key=True, nullable=True)
+    products: Optional[ProductInventory] = ormar.ForeignKey(ProductInventory)
+    variation: Optional[list[Variation]] = ormar.ManyToMany(Variation)
+
+
+@pre_save([Product, ProductInventory, ProductOption])
 async def create_uuid(sender, instance, **kwargs):
     instance.id = uuid4()

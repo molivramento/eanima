@@ -95,7 +95,6 @@ def decode_token(token: str):
 
 def decode_refresh_token(refresh: str):
     decoded_token = jwt.decode(refresh, REFRESH_SECRET_KEY, algorithms=[ALGORITHM])
-    print(decoded_token)
     if float(decoded_token['exp']) > time.time():
         return {
             'access_token': encode_token(data={'id': str(decoded_token['id']), 'username': decoded_token['username']}),
