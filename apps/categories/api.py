@@ -7,8 +7,8 @@ router = APIRouter()
 
 
 @router.get('/', response_model=list[Category])
-async def get_categories():
-    return await Category.objects.order_by('name').all()
+async def get_category():
+    return await Category.objects.select_related('parent').all()
 
 
 @router.get('/subCategories/{parent}', response_model=Category)
